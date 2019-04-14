@@ -90,6 +90,7 @@ void loop() {
       lifes[i] = lifes[i] < 1 ? lifes[i] += 0.25 : 1;
 
       FillPaletteColors(i, startIndex);
+      Serial.println(i, DEC);
     }
     else {
       lifes[i] = lifes[i] > 0 ? lifes[i] -= 0.05 : 0;
