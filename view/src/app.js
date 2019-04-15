@@ -1,6 +1,8 @@
 import * as SINT from 'sint.js'
 import io from 'socket.io-client';
 
+import * as Tone from 'tone'
+
 
 const config = {
 	domElement: document.querySelector('#webglContainer'), // 画布容器
@@ -48,9 +50,7 @@ function create() {
 	console.log(SINT.loader.resources);
 
 	// audio
-	var s0 = SINT.Audios.add('sound0');
-	s0.loop = true;
-	SINT.Audios.add('sound1');
+	var s0 = SINT.Audios.add('sound1');
 
 	//bg image
 	var bg = new SINT.SpriteClip(0, 0, 'bg');
@@ -72,7 +72,7 @@ function create() {
 					x: 1,
 					y: 1,
 				});
-				
+
 			}
 		});
 
@@ -83,11 +83,36 @@ function create() {
 
 
 
+var synth = new Tone.PolySynth(8, Tone.Synth).toMaster();
+
 var socket = io('http://127.0.0.1:3040/');
 socket.on('aArr', aArrFrame);
+
+
+var aArr = [0,0,0,0,0,0,0,0,0];
 
 function aArrFrame(_d) {
 	// let depth8Arr = pako.inflate(depthBuffer);
 
-	console.log(_d);
+	// console.log(_d);
+    if(aArr[_d] == 0 )
+    {
+    	var _num =_d;
+    	aArr[_num] = 1;
+    	console.log(aArr);
+    	var _name = "C"+(_num+2);
+    	console.log(_name);
+
+    	synth.triggerAttackRelease(_name,.1);
+
+    	setTimeout(function(){
+    		aArr[_num] = 0;
+    	},1000);
+    }
+
+
+	
+
+	// synth.triggerAttackRelease(["C4", "E4", "A4"], "4n");
+	
 }

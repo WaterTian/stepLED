@@ -34,7 +34,8 @@
   },
   "dependencies": {
     "sint.js": "0.0.10",
-    "socket.io": "^2.2.0"
+    "socket.io": "^2.2.0",
+    "tone": "^13.4.9"
   },
   "babel": {
     "presets": [
