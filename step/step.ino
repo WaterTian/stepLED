@@ -1,13 +1,13 @@
 #include <FastLED.h>
 
 #define NUM_LEDS 144 //每条led数
-#define NUM_STEPS 5 //台阶数
+#define NUM_STEPS 3 //台阶数
 #define FRAMES_PER_SECOND  90  //FPS
 
 //CRGB leds[NUM_LEDS];     // 创建光带leds
 CRGB leds[NUM_STEPS][NUM_LEDS];
 
-int aPins[NUM_STEPS] = {0, 2, 3}; //a口s
+int aPins[NUM_STEPS] = {0, 1, 2}; //a口s
 
 float lifes[NUM_STEPS]; //0~1
 
@@ -84,23 +84,22 @@ void loop() {
 
   for (int i = 0; i < NUM_STEPS; i++) {
     int _a = analogRead(aPins[i]);
-
     
     if (_a < 100) {
       lifes[i] = lifes[i] < 1 ? lifes[i] += 0.25 : 1;
-
+      
       FillPaletteColors(i, startIndex);
-      Serial.println(i, DEC);
+      
+      Serial.print(i,DEC);
+      delay(10);
     }
     else {
       lifes[i] = lifes[i] > 0 ? lifes[i] -= 0.05 : 0;
 
       FillPaletteColors(i, startIndex);
-
     }
 
   }
-
 
 
   //  Serial.println("____");
