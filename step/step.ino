@@ -1,13 +1,13 @@
 #include <FastLED.h>
 
 #define NUM_LEDS 144 //每条led数
-#define NUM_STEPS 3 //台阶数
+#define NUM_STEPS 4 //台阶数
 #define FRAMES_PER_SECOND  90  //FPS
 
 //CRGB leds[NUM_LEDS];     // 创建光带leds
 CRGB leds[NUM_STEPS][NUM_LEDS];
 
-int aPins[NUM_STEPS] = {0, 1, 2}; //a口s
+int aPins[NUM_STEPS] = {0, 1, 2, 3}; //a口s
 
 float lifes[NUM_STEPS]; //0~1
 

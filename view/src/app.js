@@ -1,7 +1,8 @@
 import * as SINT from 'sint.js'
 import io from 'socket.io-client';
 
-import * as Tone from 'tone'
+import * as Tone from 'tone';
+import TyAudio from './TyAudio';
 
 
 const config = {
@@ -20,35 +21,12 @@ const assets1 = {
 	sound2: './assets/sound/s2.mp3',
 }
 
-
 var game = new SINT.Game(config);
-
-var loadingTxt = new SINT.TextClip(game.initWidth / 2, 600, '0%', {
-	fontFamily: 'Arial',
-	fontSize: 42,
-	fontWeight: 'bold',
-	fill: ['#d2497d', '#5a7cd3']
-})
-loadingTxt.anchor.set(0.5)
-game.add(loadingTxt)
-
 game.preload({
 	assets: assets1,
-	loading: loading,
 	loaded: create,
 })
-
-function loading(e) {
-	console.log("loading1_" + e.progress)
-	loadingTxt.text = Math.floor(e.progress) + '%'
-}
-
-
 function create() {
-	game.remove(loadingTxt)
-
-	console.log(SINT.loader.resources);
-
 	// audio
 	var s0 = SINT.Audios.add('sound1');
 
@@ -76,43 +54,45 @@ function create() {
 			}
 		});
 
-		s0.play();
+		// s0.play();
+		audioArr[0].attack();
 	})
 
+	btn1.on('pointerup', function() {
+		// audioArr[1].release();
+		console.log(audioArr[0].life)
+	})
+
+
+	//update
+	game.ticker.add(update);
 }
 
 
 
-var synth = new Tone.PolySynth(8, Tone.Synth).toMaster();
-
 var socket = io('http://127.0.0.1:3040/');
 socket.on('aArr', aArrFrame);
 
+var synth = new Tone.PolySynth(8, Tone.Synth).toMaster();
+var audioArr = [];
+for (var i = 0; i < 7; i++) {
+	var _audio = new TyAudio(synth, i);
+	audioArr.push(_audio);
+}
 
-var aArr = [0,0,0,0,0,0,0,0,0];
 
 function aArrFrame(_d) {
 	// let depth8Arr = pako.inflate(depthBuffer);
-
-	// console.log(_d);
-    if(aArr[_d] == 0 )
-    {
-    	var _num =_d;
-    	aArr[_num] = 1;
-    	console.log(aArr);
-    	var _name = "C"+(_num+2);
-    	console.log(_name);
-
-    	synth.triggerAttackRelease(_name,.1);
-
-    	setTimeout(function(){
-    		aArr[_num] = 0;
-    	},1000);
-    }
+	var _num = _d;
+	audioArr[_num].attack();
+}
 
 
-	
 
-	// synth.triggerAttackRelease(["C4", "E4", "A4"], "4n");
-	
+function update() {
+
+	for (var i = 0; i < audioArr.length; i++) {
+		audioArr[i].update();
+	}
+
 }
